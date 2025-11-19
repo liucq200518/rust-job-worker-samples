@@ -32,14 +32,15 @@ class TestQuery extends ClientInitializer {
     @Test
     void testQueryJob() {
         JobInfoQuery jobInfoQuery = new JobInfoQuery()
-                .setIdGt(-1L)
-                .setIdLt(10086L)
-                .setJobNameLike("DAG")
-                .setGmtModifiedGt(DateUtils.addYears(new Date(), -10))
-                .setGmtCreateLt(DateUtils.addDays(new Date(), 10))
-                .setExecuteTypeIn(Lists.newArrayList(ExecuteType.STANDALONE.getV(), ExecuteType.BROADCAST.getV(), ExecuteType.MAP_REDUCE.getV()))
-                .setProcessorTypeIn(Lists.newArrayList(ProcessorType.BUILT_IN.getV(), ProcessorType.SHELL.getV(), ProcessorType.EXTERNAL.getV()))
-                .setProcessorInfoLike("tech.powerjob");
+//                .setIdGt(-1L)
+//                .setIdLt(10086L)
+//                .setJobNameLike("DAG")
+//                .setGmtModifiedGt(DateUtils.addYears(new Date(), -10))
+//                .setGmtCreateLt(DateUtils.addDays(new Date(), 10))
+//                .setExecuteTypeIn(Lists.newArrayList(ExecuteType.STANDALONE.getV(), ExecuteType.BROADCAST.getV(), ExecuteType.MAP_REDUCE.getV()))
+//                .setProcessorTypeIn(Lists.newArrayList(ProcessorType.BUILT_IN.getV(), ProcessorType.SHELL.getV(), ProcessorType.EXTERNAL.getV()))
+//                .setProcessorInfoLike("tech.powerjob");
+                .setProcessorInfoEq("tech.powerjob.samples.processors.StandaloneProcessorDemo");
 
         ResultDTO<List<JobInfoDTO>> jobQueryResult = powerJobClient.queryJob(jobInfoQuery);
         System.out.println(JSON.toJSONString(jobQueryResult));

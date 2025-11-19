@@ -31,6 +31,12 @@ public class WorkflowStandaloneProcessor implements BasicProcessor {
         // 尝试获取上游任务
         Map<String, String> workflowContext = context.getWorkflowContext().fetchWorkflowContext();
         log.info("工作流上下文数据:{}", workflowContext);
+        if (context.getWorkflowContext().fetchWorkflowContext().get("a") == null) {
+            context.getWorkflowContext().appendData2WfContext("a", "1");
+            //return new ProcessResult(false, context.getJobId() + " process failed.");
+        }else {
+            context.getWorkflowContext().appendData2WfContext("b", "2");
+        }
         return new ProcessResult(true, context.getJobId() + " process successfully.");
     }
 }

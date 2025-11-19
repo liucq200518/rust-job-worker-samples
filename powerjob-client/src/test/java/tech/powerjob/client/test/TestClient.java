@@ -1,10 +1,14 @@
 package tech.powerjob.client.test;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import tech.powerjob.client.PowerJobClient;
 import tech.powerjob.common.enums.ExecuteType;
 import tech.powerjob.common.enums.ProcessorType;
 import tech.powerjob.common.enums.TimeExpressionType;
+import tech.powerjob.common.model.LifeCycle;
 import tech.powerjob.common.request.http.SaveJobInfoRequest;
 import tech.powerjob.common.response.InstanceInfoDTO;
 import tech.powerjob.common.response.JobInfoDTO;
@@ -24,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  */
 class TestClient extends ClientInitializer {
 
-    public static final long JOB_ID = 4L;
+    public static final long JOB_ID = 2059L;
 
     @Test
     void testSaveJob() {
@@ -35,11 +39,16 @@ class TestClient extends ClientInitializer {
         newJobInfo.setJobDescription("test OpenAPI");
         newJobInfo.setJobParams("{'aa':'bb'}");
         newJobInfo.setTimeExpressionType(TimeExpressionType.CRON);
-        newJobInfo.setTimeExpression("0 0 * * * ? ");
+        newJobInfo.setTimeExpression("0 * * * * ? ");
         newJobInfo.setExecuteType(ExecuteType.STANDALONE);
         newJobInfo.setProcessorType(ProcessorType.BUILT_IN);
         newJobInfo.setProcessorInfo("tech.powerjob.samples.processors.StandaloneProcessorDemo");
         newJobInfo.setDesignatedWorkers("");
+        DateTime startDate = DateUtil.offsetHour(DateUtil.beginOfDay(DateUtil.date()), 1);
+        newJobInfo.setLifeCycle(new LifeCycle() {{
+            setStart(ObjectUtil.isNotNull(startDate) ? startDate.getTime() : DateUtil.date().getTime());
+            setEnd(ObjectUtil.isNotNull(startDate) ? startDate.getTime() : DateUtil.date().getTime());
+        }});
 
         newJobInfo.setMinCpuCores(1.1);
         newJobInfo.setMinMemorySpace(1.2);
@@ -93,28 +102,28 @@ class TestClient extends ClientInitializer {
 
     @Test
     void testRun() {
-        ResultDTO<Long> res = powerJobClient.runJob(JOB_ID, null, 0);
+        ResultDTO<Long> res = powerJobClient.runJob(JOB_ID, "{'cc':'dd'}", 0);
         System.out.println(res);
         Assertions.assertNotNull(res);
     }
 
     @Test
     void testRunJobDelay() {
-        ResultDTO<Long> res = powerJobClient.runJob(JOB_ID, "this is instanceParams", 60000);
+        ResultDTO<Long> res = powerJobClient.runJob(JOB_ID, "this is instanceParams", 10000);
         System.out.println(res);
         Assertions.assertNotNull(res);
     }
 
     @Test
     void testFetchInstanceInfo() {
-        ResultDTO<InstanceInfoDTO> res = powerJobClient.fetchInstanceInfo(205436386851946560L);
+        ResultDTO<InstanceInfoDTO> res = powerJobClient.fetchInstanceInfo(1535L);
         System.out.println(res);
         Assertions.assertNotNull(res);
     }
 
     @Test
     void testStopInstance() {
-        ResultDTO<Void> res = powerJobClient.stopInstance(205436995885858880L);
+        ResultDTO<Void> res = powerJobClient.stopInstance(11L);
         System.out.println(res);
         Assertions.assertNotNull(res);
     }
